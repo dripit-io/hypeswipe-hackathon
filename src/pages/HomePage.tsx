@@ -1,10 +1,18 @@
 import React from "react";
 
+import { RadialGradient, SwipeCardList } from "@/components/main";
+import { mockArtists } from "@/constants";
+
 const HomePage: React.FC = () => {
   return (
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-bold">Home Page</h1>
-    </div>
+    <>
+      <RadialGradient />
+      <main className="container mx-auto relative py-8">
+        <section>
+          <SwipeCardList artists={mockArtists} />
+        </section>
+      </main>
+    </>
   );
 };
 
