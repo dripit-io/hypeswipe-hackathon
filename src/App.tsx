@@ -1,9 +1,12 @@
-const App = () => {
-  return (
-    <main>
-      <h1>Hello world</h1>
-    </main>
-  );
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { routes } from "@/routes";
+
+const router = createBrowserRouter(routes);
+
+const App: React.FC = () => {
+  return <RouterProvider router={router} />;
 };
 
 export default App;
