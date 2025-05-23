@@ -1,13 +1,13 @@
 import React from "react";
+import { MusicIcon } from "lucide-react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
 import { cn } from "@/lib";
+import type { Artist } from "@/types";
 
 const SWIPE_THRESHOLD = 130;
 
-interface SwipeCardProps {
-  name: string;
-  image: string;
+interface SwipeCardProps extends Artist {
   isFirst: boolean;
   isSecond: boolean;
   onSwipe: (isRight: boolean) => void;
@@ -16,6 +16,8 @@ interface SwipeCardProps {
 export const SwipeCard: React.FC<SwipeCardProps> = ({
   name,
   image,
+  country,
+  genre,
   isFirst,
   isSecond,
   onSwipe,
@@ -29,12 +31,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   );
 
   return (
-    <motion.img
-      src={image}
-      alt={name}
+    <motion.div
       className={cn(
         "w-[87.5%] max-w-[420px] aspect-[69/108] rounded-3xl bg-slate-800 object-cover",
-        "hover:cursor-grab active:cursor-grabbing",
+        "relative hover:cursor-grab active:cursor-grabbing overflow-hidden",
         { "z-10": isFirst }
       )}
       style={{
@@ -64,6 +64,25 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           y.set(0);
         }
       }}
-    />
+    >
+      <img src={image} alt={name} className="w-full h-full object-cover" />
+      <div
+        className={cn(
+          "absolute bottom-12 w-[calc(100%-16px)] left-1/2 -translate-x-1/2 rounded-3xl",
+          "bg-white/15 backdrop-blur-[50px] flex justify-between p-4"
+        )}
+      >
+        <div>
+          <p className="font-bold mb-1">{name}</p>
+          <p className="text-xs">{country ?? "Worldwide"}</p>
+        </div>
+        {genre && (
+          <div className="self-start flex items-center gap-1 rounded-3xl bg-white/20 p-1.5">
+            <MusicIcon className="size-3" />
+            <p className="text-xs">{genre}</p>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 };
