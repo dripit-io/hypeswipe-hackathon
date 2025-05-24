@@ -22,6 +22,11 @@ export const HypeswipeABI = [
   },
   {
     "inputs": [],
+    "name": "EmptyArgs",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "EmptySource",
     "type": "error"
   },
