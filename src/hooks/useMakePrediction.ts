@@ -24,14 +24,18 @@ export const useMakePrediction = () => {
         throw new Error("Invalid challengeId or empty predictions");
       }
 
-      const approval = await writeContract(walletClient, {
+      const approvalHash = await writeContract(walletClient, {
         address: import.meta.env.VITE_ARENA_TOKEN_CONTRACT as Hex,
         abi: ERC20_ABI as Abi,
         functionName: "approve",
         args: [import.meta.env.VITE_HYPESWIPE_CONTRACT as Hex, entryFee],
       });
 
-      if (isNil(approval)) {
+      const approvalReceipt = await waitForTransactionReceipt(walletClient, {
+        hash: approvalHash,
+      });
+
+      if (isNil(approvalReceipt)) {
         throw new Error("Approval failed.");
       }
 
@@ -54,7 +58,8 @@ export const useMakePrediction = () => {
         status: "success",
         action: "makePrediction",
         txnReceipt,
-        approval,
+        approvalHash,
+        approvalReceipt,
         hash,
       };
     },
