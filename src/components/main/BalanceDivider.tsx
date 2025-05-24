@@ -10,7 +10,7 @@ export const BalanceDivider: React.FC<BalanceDividerProps> = ({
   arenaBalance,
   claimAmount,
 }) => (
-  <div className="flex flex-col items-center w-full px-4">
+  <div className="flex flex-col items-center w-full">
     <div className="flex items-center w-full gap-2">
       <div className="h-[1px] flex-grow bg-[#203F3B]" />
       <div className="flex justify-center gap-2">
