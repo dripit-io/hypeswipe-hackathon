@@ -38,7 +38,7 @@ export const ParticipateContainer: React.FC<ParticipateContainerProps> = ({
         </div>
         <Button
           className={cn(
-            "w-full text-xl py-6 text-white bg-[#EA530A] rounded-4xl"
+            "w-full text-xl py-6 text-white bg-[#EA530A] rounded-full"
           )}
           size="lg"
         >

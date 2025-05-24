@@ -4,7 +4,7 @@ import { LoaderCircleIcon } from "lucide-react";
 import {
   Button as ShadButton,
   type ButtonProps as ShadButtonProps,
-} from "@/components/ui/button";
+} from "@/components/ui";
 import { cn } from "@/lib";
 
 export interface ButtonProps extends ShadButtonProps {

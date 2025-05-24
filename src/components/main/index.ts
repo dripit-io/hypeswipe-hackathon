@@ -1,4 +1,5 @@
 export * from "./Button";
+export * from "./ClaimRewardDialog";
 export * from "./Header";
 export * from "./PrizePool";
 export * from "./RadialGradient";

@@ -11,7 +11,7 @@ interface SelectionListProps {
 export const SelectionList: React.FC<SelectionListProps> = ({ selection }) => (
   <div className="grid gap-3 grid-cols-3">
     {selection.map((artist) => (
-      <div className="relative">
+      <div key={artist.id} className="relative">
         {artist.sideWon !== undefined && (
           <div
             className={cn(
