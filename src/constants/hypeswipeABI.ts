@@ -576,6 +576,24 @@ export const HypeswipeABI = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "challengeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool[6]",
+        "name": "outcomes",
+        "type": "bool[6]"
+      }
+    ],
+    "name": "manualResolveChallenge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "nextChallengeId",
     "outputs": [
