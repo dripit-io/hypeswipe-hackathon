@@ -13,12 +13,14 @@ interface ParticipateContainerProps {
   challengeDetails?: ChallengeDetails;
   prediction: EnhancedArtist[];
   entryFee?: bigint;
+  onSuccess?: () => void;
 }
 
 export const ParticipateContainer: React.FC<ParticipateContainerProps> = ({
   challengeDetails,
   prediction,
   entryFee,
+  onSuccess,
 }) => {
   const { userInfo } = useUserInfo();
   const makePredictionMutation = useMakePrediction();
@@ -29,7 +31,11 @@ export const ParticipateContainer: React.FC<ParticipateContainerProps> = ({
       predictions: prediction.map((p) => p.side === "right"),
       entryFee: entryFee ?? BigInt(0),
     });
+
     console.log({ result });
+    if (result?.status === "success") {
+      onSuccess?.();
+    }
   };
 
   return (

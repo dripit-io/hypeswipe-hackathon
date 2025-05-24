@@ -4,10 +4,18 @@ import { Header, RadialGradient } from "@/components/main";
 import {
   ParticipateContainer,
   PendingResultsContainer,
+  ResultsContainer,
   SwipeContainer,
 } from "@/components/containers";
-import { useEntryFee, useGetChallenge, useSpotifyArtists } from "@/hooks";
+import {
+  useEntryFee,
+  useGetChallenge,
+  useGetChallengeOutcomes,
+  useGetUserPrediction,
+  useSpotifyArtists,
+} from "@/hooks";
 import type { EnhancedArtist } from "@/types";
+import { isEmpty } from "lodash";
 
 enum Step {
   Swipe = "swipe",
@@ -24,6 +32,8 @@ const HomePage: React.FC = () => {
     spotifyIds: challengeDetails?.spotifyIds ?? [],
   });
   const { data: entryFee } = useEntryFee();
+  const { data: userPrediction } = useGetUserPrediction();
+  const { data: challengeOutcomes } = useGetChallengeOutcomes();
 
   React.useEffect(() => {
     console.log({ challengeDetails });
@@ -31,9 +41,41 @@ const HomePage: React.FC = () => {
       typeof challengeDetails?.targetDate === "number" &&
       Date.now() > (challengeDetails?.targetDate ?? 0) * 1000
     ) {
-      setStep(Step.PendingResults);
+      if (challengeDetails?.isResolved) {
+        setStep(Step.Results);
+      } else {
+        setStep(Step.PendingResults);
+      }
     }
   }, [challengeDetails]);
+
+  React.useEffect(() => {
+    console.log({ userPrediction, challengeOutcomes });
+    if (!isEmpty(userPrediction?.predictions)) {
+      setStep(Step.PendingResults);
+    }
+    if (
+      !isEmpty(artists) &&
+      !isEmpty(userPrediction?.predictions) &&
+      !isEmpty(challengeOutcomes)
+    ) {
+      setSelection(
+        artists?.map((a, index) => ({
+          ...a,
+          side: userPrediction?.predictions[index] ? "right" : "left",
+          sideWon: challengeOutcomes?.[index] ? "right" : "left",
+        })) ?? []
+      );
+    } else if (!isEmpty(artists) && !isEmpty(userPrediction?.predictions)) {
+      setSelection(
+        artists?.map((a, index) => ({
+          ...a,
+          side: userPrediction?.predictions[index] ? "right" : "left",
+          sideWon: undefined,
+        })) ?? []
+      );
+    }
+  }, [userPrediction, artists, challengeOutcomes]);
 
   return (
     <>
@@ -60,6 +102,9 @@ const HomePage: React.FC = () => {
             challengeDetails={challengeDetails}
             prediction={selection}
             entryFee={entryFee}
+            onSuccess={() => {
+              setStep(Step.PendingResults);
+            }}
           />
         )}
         {step === Step.PendingResults && (
@@ -68,14 +113,7 @@ const HomePage: React.FC = () => {
             prediction={selection}
           />
         )}
-        {/* <ResultsContainer
-            challengeDetails={challengeDetails}
-          prediction={mockArtists.map((v) => ({
-            ...v,
-            side: Math.random() > 0.4 ? "left" : "right",
-            sideWon: Math.random() > 0.4 ? "left" : "right",
-          }))}
-        /> */}
+        {step === Step.Results && <ResultsContainer prediction={selection} />}
       </main>
     </>
   );

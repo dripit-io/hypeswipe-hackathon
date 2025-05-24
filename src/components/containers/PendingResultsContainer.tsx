@@ -42,8 +42,8 @@ export const PendingResultsContainer: React.FC<
       {/* prediction grid */}
       {!isEmpty(prediction) && (
         <>
-          <SelectionList selection={prediction} />
           <p className="mb-2">My Selections:</p>
+          <SelectionList selection={prediction} />
         </>
       )}
 

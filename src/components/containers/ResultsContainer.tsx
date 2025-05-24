@@ -1,29 +1,29 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { isEmpty } from "lodash";
 
 import BadgeStarIcon from "@/assets/badge-star.svg?react";
-import StarMedalIcon from "@/assets/star-medal.svg?react";
-import type { ChallengeDetails, EnhancedArtist } from "@/types";
+import type { EnhancedArtist } from "@/types";
 import {
   Button,
   ClaimRewardDialog,
   PrizePool,
   SelectionList,
 } from "@/components/main";
-import { cn } from "@/lib";
-import { ARENA_DECIMALS } from "@/constants";
-import { formatUnits } from "viem";
-
-const userName = "Johanna";
+import { cn, formatBalance } from "@/lib";
+import { useUserInfo } from "@/components/providers";
+import { useClaimAllRewards, useGetClaims } from "@/hooks";
 
 interface ResultsContainerProps {
-  challengeDetails?: ChallengeDetails;
   prediction: EnhancedArtist[];
 }
 
 export const ResultsContainer: React.FC<ResultsContainerProps> = ({
-  challengeDetails,
   prediction,
 }) => {
+  const navigate = useNavigate();
+  const [openClaimAllDialog, setOpenClaimAllDialog] = React.useState(false);
+  const { userInfo } = useUserInfo();
   const sidesWon = React.useMemo(
     () =>
       prediction.reduce(
@@ -32,20 +32,35 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
       ),
     [prediction]
   );
+  const hasWon = React.useMemo(
+    () => !isEmpty(prediction) && sidesWon === prediction.length,
+    [sidesWon, prediction]
+  );
+  const claimAllMutation = useClaimAllRewards();
+  const { data: totalClaimableRewards } = useGetClaims();
 
   return (
     <section className="flex flex-grow flex-col justify-between px-6 pt-0.5 pb-4">
       <div className="flex flex-col items-center justify-center text-center">
-        {sidesWon === prediction.length && <StarMedalIcon />}
-        {sidesWon !== 0 && sidesWon !== prediction.length && <BadgeStarIcon />}
+        {/* {sidesWon === prediction.length && <StarMedalIcon />} */}
+        {hasWon && <BadgeStarIcon />}
         <p className="my-3 text-xl font-bold text-[#76E6A0]">
-          {sidesWon === 0 ? (
-            <>Didn't hit this time {userName}</>
+          {!hasWon ? (
+            <>
+              Didn't hit this time
+              {!isEmpty(userInfo?.twitterName)
+                ? ` ${userInfo?.twitterName}`
+                : ""}
+            </>
           ) : (
             <>
               <span>Congratulations</span>
-              <br />
-              <span>{userName}!</span>
+              {!isEmpty(userInfo?.twitterName) && (
+                <>
+                  <br />
+                  <span>{userInfo?.twitterName}!</span>
+                </>
+              )}
             </>
           )}
         </p>
@@ -56,7 +71,7 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
           </span>{" "}
           correct answers.
         </p>
-        {sidesWon === 0 && (
+        {!hasWon && (
           <p className="mt-5">
             Not in the prizes this time, but there's always the next game.
           </p>
@@ -64,28 +79,26 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
       </div>
 
       {/* prize pool */}
-      {sidesWon === 0 ? (
+      {!hasWon ? (
         <div className="my-4 h-[1px] w-full bg-[#203F3B]" />
       ) : (
         <PrizePool
-          amount={formatUnits(
-            challengeDetails?.totalPool ?? BigInt(0),
-            ARENA_DECIMALS
-          )}
+          amount={formatBalance(Number(totalClaimableRewards ?? 0))}
           won
         />
       )}
 
       <p className="mb-2">My Selections:</p>
       <SelectionList selection={prediction} />
-      {sidesWon === 0 ? (
+      {!hasWon ? (
         <Button
           size="lg"
           className={cn(
             "w-full cursor-pointer rounded-full py-6 text-xl",
             "border border-[#76E6A0] bg-transparent text-[#76E6A0]",
             "hover:border-[#5cad7b] hover:bg-transparent hover:text-[#5cad7b]"
-          )}>
+          )}
+          onClick={() => navigate("/profile")}>
           Try Again
         </Button>
       ) : (
@@ -94,17 +107,16 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
           className={cn(
             "w-full cursor-pointer rounded-full py-6 text-xl",
             "bg-[#76E6A0] text-black hover:bg-[#5cad7b]"
-          )}>
+          )}
+          onClick={() => claimAllMutation.mutate()}>
           Claim Winnings
         </Button>
       )}
       <ClaimRewardDialog
-        isOpen={false}
-        onOpenChange={() => {
-          console.log({ mstatus: "should close dialog" });
-        }}
-        rewardAmount="500"
-        status="idle"
+        isOpen={openClaimAllDialog}
+        onOpenChange={setOpenClaimAllDialog}
+        rewardAmount={formatBalance(Number(totalClaimableRewards ?? 0))}
+        status={claimAllMutation.status}
       />
     </section>
   );
