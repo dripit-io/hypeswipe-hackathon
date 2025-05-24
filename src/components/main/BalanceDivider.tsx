@@ -2,38 +2,38 @@ import React from "react";
 import { TrophyIcon } from "lucide-react";
 
 interface BalanceDividerProps {
-  arenaBalance: number;
-  claimAmount: number;
+  arenaBalance: string;
+  claimAmount: string;
 }
 
 export const BalanceDivider: React.FC<BalanceDividerProps> = ({
   arenaBalance,
   claimAmount,
 }) => (
-  <div className="flex flex-col items-center w-full">
-    <div className="flex items-center w-full gap-2">
+  <div className="flex w-full flex-col items-center">
+    <div className="flex w-full items-center gap-2">
       <div className="h-[1px] flex-grow bg-[#203F3B]" />
       <div className="flex justify-center gap-2">
-        <p className="text-sm px-2 py-1 flex gap-1.5 items-center rounded-lg bg-white text-black">
+        <p className="flex items-center gap-1.5 rounded-lg bg-white px-2 py-1 text-sm text-black">
           <img
             src="/assets/arena-logo.png"
             alt="arena logo"
             className="size-4"
           />
-          <span className="text-[#0F0915] text-base font-bold leading-normal">
+          <span className="pt-0.5 text-base leading-normal font-bold text-[#0F0915]">
             {arenaBalance}
           </span>
-          <span className="text-[#0F0915] text-sm font-medium leading-normal">
+          <span className="pt-0.5 text-sm leading-normal font-medium text-[#0F0915]">
             $ARENA
           </span>
         </p>
-        {claimAmount > 0 && (
-          <p className="text-sm px-2 py-1 flex gap-1.5 items-center rounded-lg bg-white/12 text-white">
+        {Number(claimAmount) > 0 && (
+          <div className="flex items-center gap-1.5 rounded-lg bg-white/12 px-2 py-1 text-sm text-white">
             <TrophyIcon className="size-3 text-white" />
-            <p className="text-white text-base font-bold leading-normal">
+            <p className="text-base leading-normal font-bold text-white">
               {claimAmount}
             </p>
-          </p>
+          </div>
         )}
       </div>
       <div className="h-[1px] flex-grow bg-[#203F3B]" />

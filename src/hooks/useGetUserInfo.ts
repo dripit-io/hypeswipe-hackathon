@@ -26,7 +26,7 @@ export const useGetUserInfo = (): UseQueryResult<UserInfo | null> => {
   const { address } = useAccount();
 
   return useQuery({
-    queryKey: ["balance", address],
+    queryKey: ["userInfo", address],
     queryFn: async () => {
       if (isNil(address)) throw new Error("Invalid address");
 
@@ -35,8 +35,6 @@ export const useGetUserInfo = (): UseQueryResult<UserInfo | null> => {
         timestamp,
         import.meta.env.VITE_ARENA_SALT ?? ""
       );
-
-      return null; // remove later
 
       const response = await fetch(
         `https://api.starsarena.com/user/address?address=${address}`,
