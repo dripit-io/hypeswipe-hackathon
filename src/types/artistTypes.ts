@@ -5,3 +5,8 @@ export interface Artist {
   country?: string;
   genre?: string;
 }
+
+export interface EnhancedArtist extends Artist {
+  side?: "left" | "right";
+  sideWon?: "left" | "right";
+}

@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
       </p>
       <div className="flex gap-2 items-center justify-end">
         <div className="flex flex-col gap-1.5">
-          <div className="flex gap-1 justify-end">
+          <div className="flex gap-1.5 justify-end">
             <img
               src="/assets/arena-logo.png"
               alt="arena logo"

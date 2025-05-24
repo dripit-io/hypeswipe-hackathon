@@ -4,11 +4,7 @@ import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { mockArtists } from "@/constants";
 import { SwipeCardList } from "@/components/main";
 import { cn } from "@/lib";
-import type { Artist } from "@/types";
-
-interface EnhancedArtist extends Artist {
-  side?: "left" | "right";
-}
+import type { Artist, EnhancedArtist } from "@/types";
 
 export const SwipeContainer: React.FC = () => {
   const [enhancedArtists, setEnhancedArtists] = React.useState<
