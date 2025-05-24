@@ -38,7 +38,9 @@ export const SelectionList: React.FC<SelectionListProps> = ({ selection }) => (
           <img
             src={artist.image}
             alt={artist.name}
-            className="w-full h-full object-cover"
+            className={cn("w-full h-full object-cover", {
+              "grayscale": artist.sideWon !== artist.side
+            })}
           />
           <div className="absolute bottom-0 left-0 w-full pb-3 px-2 z-20">
             <p className="text-sm font-bold truncate">{artist.name}</p>
