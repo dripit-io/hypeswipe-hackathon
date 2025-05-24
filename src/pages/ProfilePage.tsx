@@ -51,7 +51,7 @@ const ProfilePage: React.FC = () => {
           </div>
           <BalanceDivider arenaBalance={200} claimAmount={50.57} />
         </div>
-        <div className="flex flex-col items-start gap-4 justify-center w-full px-6">
+        <div className="flex flex-col items-start gap-4 justify-center w-full px-6 pb-8">
           <p className="text-base font-medium">My previous games:</p>
           <div className="flex flex-col gap-4 w-full">
             {mockGameHistory.map((game, index) => (

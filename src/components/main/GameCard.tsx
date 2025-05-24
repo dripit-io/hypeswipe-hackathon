@@ -3,12 +3,23 @@ import React from "react";
 import type { EnhancedArtist } from "@/types";
 import { cn } from "@/lib";
 import { CheckIcon, XIcon } from "lucide-react";
+import { Button } from "@/components/main";
 
 interface GameCardProps {
   selection: EnhancedArtist[];
 }
 
 export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
+  const sidesWon = React.useMemo(
+    () =>
+      selection.reduce(
+        (total, artist) => total + (artist.sideWon === artist.side ? 1 : 0),
+        0
+      ),
+    [selection]
+  );
+
+  const hasWinnings = sidesWon > 0;
 
   return (
     <div className="w-full rounded-xl bg-white/[0.07] p-3">
@@ -60,6 +71,9 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
           </div>
         ))}
       </div>
+      {hasWinnings && (
+        <Button className="w-full mt-4 bg-[#76E6A0] shadow-[-8px_8px_20px_0px_rgba(0,0,0,0.20)] h-8">Claim Winnings!</Button>
+      )}
     </div>
   );
 };
