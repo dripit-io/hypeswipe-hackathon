@@ -20,9 +20,9 @@ export const BalanceDivider: React.FC<BalanceDividerProps> = ({
             alt="arena logo"
             className="size-4"
           />
-          <p className="text-[#0F0915] text-base font-bold leading-normal">
+          <span className="text-[#0F0915] text-base font-bold leading-normal">
             {arenaBalance}
-          </p>
+          </span>
           <span className="text-[#0F0915] text-sm font-medium leading-normal">
             $ARENA
           </span>

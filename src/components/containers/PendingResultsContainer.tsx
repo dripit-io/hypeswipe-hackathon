@@ -1,37 +1,53 @@
 import React from "react";
 
-import type { EnhancedArtist } from "@/types";
+import type { ChallengeDetails, EnhancedArtist } from "@/types";
 import { CountdownCircle, PrizePool, SelectionList } from "@/components/main";
+import { formatUnits } from "viem";
+import { ARENA_DECIMALS } from "@/constants";
+import { isEmpty } from "lodash";
 
 interface PendingResultsContainerProps {
+  challengeDetails?: ChallengeDetails;
   prediction: EnhancedArtist[];
 }
 
 export const PendingResultsContainer: React.FC<
   PendingResultsContainerProps
-> = ({ prediction }) => {
+> = ({ challengeDetails, prediction }) => {
+  const startDate = (challengeDetails?.startTimestamp ?? 0) * 1000;
+  const endDate = (challengeDetails?.targetDate ?? 0) * 1000;
+
   return (
-    <section className="pt-0.5 px-6 flex flex-col justify-between flex-grow pb-4">
-      <div className="text-center flex flex-col items-center">
-        <p className="text-[#76E6A0] text-xl font-bold mb-2">Results</p>
+    <section className="flex flex-grow flex-col justify-between px-6 pt-0.5 pb-4">
+      <div className="flex flex-col items-center text-center">
+        <p className="mb-2 text-xl font-bold text-[#76E6A0]">Results</p>
         <p className="text-slate-500">will be anounced in:</p>
         <CountdownCircle
           className="mt-4"
-          startDate={
-            Date.now() - 2 * 60 * 60 * 1000 - 5 * 60 * 1000 - 27 * 1000
-          }
-          endDate={Date.now() + 2 * 60 * 60 * 1000 + 5 * 60 * 1000 + 27 * 1000}
+          startDate={startDate}
+          endDate={endDate}
         />
       </div>
 
-      <div className="flex-grow" />
+      {!isEmpty(prediction) && <div className="flex-grow" />}
 
       {/* prize pool */}
-      <PrizePool amount={5000} />
+      <PrizePool
+        amount={formatUnits(
+          challengeDetails?.totalPool ?? BigInt(0),
+          ARENA_DECIMALS
+        )}
+      />
 
       {/* prediction grid */}
-      <p className="mb-2">My Selections:</p>
-      <SelectionList selection={prediction} />
+      {!isEmpty(prediction) && (
+        <>
+          <SelectionList selection={prediction} />
+          <p className="mb-2">My Selections:</p>
+        </>
+      )}
+
+      {isEmpty(prediction) && <div className="flex-grow" />}
     </section>
   );
 };

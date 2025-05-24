@@ -1,6 +1,11 @@
 import React from "react";
 import { MusicIcon } from "lucide-react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  MotionValue,
+} from "framer-motion";
 
 import { cn } from "@/lib";
 import type { Artist } from "@/types";
@@ -10,20 +15,28 @@ const SWIPE_THRESHOLD = 130;
 interface SwipeCardProps extends Artist {
   isFirst: boolean;
   isSecond: boolean;
+  x?: MotionValue<number>;
+  y?: MotionValue<number>;
   onSwipe: (isRight: boolean) => void;
 }
 
 export const SwipeCard: React.FC<SwipeCardProps> = ({
   name,
-  image,
+  images,
   country,
   genre,
   isFirst,
   isSecond,
+  x: externalX,
+  y: externalY,
   onSwipe,
 }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const internalX = useMotionValue(0);
+  const internalY = useMotionValue(0);
+  const x = externalX || internalX;
+  const y = externalY || internalY;
+  const image = React.useMemo(() => images[0].url, [images]);
+
   const opacity = useTransform(
     x,
     [-300, -100, 0, 100, 300],
@@ -33,8 +46,8 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
   return (
     <motion.div
       className={cn(
-        "w-[87.5%] max-w-[420px] aspect-[69/108] rounded-3xl bg-slate-800 object-cover",
-        "relative hover:cursor-grab active:cursor-grabbing overflow-hidden",
+        "aspect-[69/108] w-[87.5%] max-w-[420px] rounded-3xl bg-slate-800 object-cover",
+        "relative overflow-hidden hover:cursor-grab active:cursor-grabbing",
         { "z-10": isFirst }
       )}
       style={{
@@ -63,21 +76,19 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           x.set(0);
           y.set(0);
         }
-      }}
-    >
-      <img src={image} alt={name} className="w-full h-full object-cover" />
+      }}>
+      <img src={image} alt={name} className="h-full w-full object-cover" />
       <div
         className={cn(
-          "absolute bottom-12 w-[calc(100%-16px)] left-1/2 -translate-x-1/2 rounded-3xl",
-          "bg-white/15 backdrop-blur-[50px] flex justify-between p-4"
-        )}
-      >
+          "absolute bottom-12 left-1/2 w-[calc(100%-16px)] -translate-x-1/2 rounded-3xl",
+          "flex justify-between bg-white/15 p-4 backdrop-blur-[50px]"
+        )}>
         <div>
-          <p className="font-bold mb-1">{name}</p>
+          <p className="mb-1 font-bold">{name}</p>
           <p className="text-xs">{country ?? "Worldwide"}</p>
         </div>
         {genre && (
-          <div className="self-start flex items-center gap-1 rounded-3xl bg-white/20 p-1.5">
+          <div className="flex items-center gap-1 self-start rounded-3xl bg-white/20 p-1.5">
             <MusicIcon className="size-3" />
             <p className="text-xs">{genre}</p>
           </div>
