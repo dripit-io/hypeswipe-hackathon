@@ -12,8 +12,9 @@ import type { EnhancedArtist } from "@/types";
 import { useUserInfo } from "@/components/providers";
 import { useBalance, useGetClaims } from "@/hooks";
 import { formatBalance } from "@/lib/utils";
-import { isNil } from "lodash";
+import { isEmpty, isNil } from "lodash";
 import { useAccount, useWalletClient } from "wagmi";
+import { UserIcon } from "lucide-react";
 
 // Mock game history data
 const mockGameHistory: EnhancedArtist[][] = [
@@ -79,11 +80,15 @@ const ProfilePage: React.FC = () => {
         <div className="flex w-full flex-col items-center justify-center gap-2 px-6">
           <div className="relative">
             <div className="size-32 rounded-full bg-slate-600/20">
-              <img
-                src={userInfo?.twitterPicture}
-                alt="Profile"
-                className="size-full rounded-full"
-              />
+              {!isEmpty(userInfo?.twitterPicture) ? (
+                <img
+                  src={userInfo?.twitterPicture}
+                  alt="Profile image"
+                  className="size-full rounded-full"
+                />
+              ) : (
+                <UserIcon className="absolute top-1/2 left-1/2 size-14 -translate-x-1/2 -translate-y-1/2 stroke-1 text-slate-400" />
+              )}
             </div>
             {/* <div className="absolute -top-0 -right-0 flex size-10 flex-col items-center justify-center rounded-full bg-white shadow-[-4px_4px_8px_0px_rgba(0,0,0,0.25)]">
               <p className="text-xs font-bold text-black">{winPercentage}%</p>

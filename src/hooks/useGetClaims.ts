@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { type Abi, type Hex } from "viem";
+import { formatUnits, type Abi, type Hex } from "viem";
 import { readContract } from "viem/actions";
 import { useAccount, useWalletClient } from "wagmi";
 import { isNil } from "lodash";
 
-import { HYPESWIPE_ABI } from "@/constants";
+import { ARENA_DECIMALS, HYPESWIPE_ABI } from "@/constants";
 
 export const useGetClaims = () => {
   const { address } = useAccount();
@@ -23,7 +23,7 @@ export const useGetClaims = () => {
         args: [address],
       });
 
-      return data;
+      return formatUnits(data as bigint, ARENA_DECIMALS);
     },
     enabled: !!walletClient && !isNil(address),
   });
