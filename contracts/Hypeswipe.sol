@@ -11,7 +11,7 @@ contract Hypeswipe is FunctionsClient, Ownable, ReentrancyGuard {
     using FunctionsRequest for FunctionsRequest.Request;
 
     // ARENA token contract on Avalanche C-chain
-    IERC20 public constant ARENA_TOKEN = IERC20(0xB8d7710f7d8349A506b75dD184F05777c82dAd0C);//IERC20(0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846);//
+    IERC20 public constant ARENA_TOKEN = IERC20(0xB8d7710f7d8349A506b75dD184F05777c82dAd0C);//IERC20(0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846);
     
     // Entry fee in ARENA tokens
     uint256 public entryFee = 1 * 10**18;
@@ -134,7 +134,7 @@ contract Hypeswipe is FunctionsClient, Ownable, ReentrancyGuard {
         // Build Chainlink Functions request
         FunctionsRequest.Request memory req;
         req.initializeRequestForInlineJavaScript(
-            "const response = await Functions.makeHttpRequest({ url: `https://dripit.io/api/hypeswipe/resolve/${args[0]}` }); return Functions.encodeString(response.data);"
+            "const response = await Functions.makeHttpRequest({ url: `https://dripit.io/api/hypeswipe/resolve/${args[0]}` }); return Functions.encodeString(response.data.data);"
         );
         
         // Add challengeId as an argument
@@ -232,7 +232,7 @@ contract Hypeswipe is FunctionsClient, Ownable, ReentrancyGuard {
         
         bool[6] memory outcomes;
         for (uint256 i = 0; i < 6; i++) {
-            outcomes[i] = outcomeBytes[i] == "1";
+            outcomes[i] = outcomeBytes[i] == "u";
         }
         
         return outcomes;
@@ -275,6 +275,16 @@ contract Hypeswipe is FunctionsClient, Ownable, ReentrancyGuard {
     function setEntryFee(uint256 _entryFee) external onlyOwner {
         require(_entryFee > 0, "Entry fee must be greater than 0");
         entryFee = _entryFee;
+    }
+    
+    // Manual resolution function for admin
+    function manualResolveChallenge(uint256 challengeId, bool[6] memory outcomes) external onlyOwner {
+        Challenge storage challenge = challenges[challengeId];
+        require(challenge.id != 0, "Challenge does not exist");
+        require(!challenge.isResolved, "Challenge already resolved");
+        require(block.timestamp >= challenge.targetDate, "Challenge has not ended yet");
+        
+        _resolveChallenge(challengeId, outcomes);
     }
     
     // Emergency function to withdraw tokens (only owner)
