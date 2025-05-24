@@ -2,6 +2,7 @@ export * from "./Button";
 export * from "./BalanceDivider";
 export * from "./ClaimRewardDialog";
 export * from "./CountdownCircle";
+export * from "./GameCard";
 export * from "./Header";
 export * from "./PrizePool";
 export * from "./RadialGradient";
