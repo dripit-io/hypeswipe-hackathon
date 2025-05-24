@@ -23,12 +23,12 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
 
   return (
     <div className="w-full rounded-xl bg-white/[0.07] p-3">
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <p className="text-white font-bold">Game #{1}</p>
+          <p className="font-bold text-white">Game #{1}</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-white text-sm">500 $ARENA</span>
+          <span className="text-sm text-white">500 $ARENA</span>
           <img
             src="/assets/arena-logo.png"
             alt="arena logo"
@@ -39,29 +39,28 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
       <div className="grid grid-cols-6 gap-1">
         {selection.map((artist) => (
           <div key={artist.id} className="flex flex-col items-center gap-1">
-            <div className="aspect-square w-full rounded-lg bg-slate-800 overflow-hidden relative">
+            <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-slate-800">
               <img
                 src={artist.image}
                 alt={artist.name}
-                className={cn("w-full h-full object-cover", {
-                  "grayscale": artist.sideWon !== artist.side
+                className={cn("h-full w-full object-cover", {
+                  grayscale: artist.sideWon !== artist.side,
                 })}
               />
               {artist.sideWon !== artist.side && (
-                <div className="absolute top-0 left-0 z-10 w-full h-full bg-[#0F0915]/65" />
+                <div className="absolute top-0 left-0 z-10 h-full w-full bg-[#0F0915]/65" />
               )}
             </div>
             <div
               className={cn(
-                "shadow-[-4px_4px_8px_0px_#00000040] size-5",
-                "rounded-full text-black flex justify-center items-center",
-                "-mt-3 z-10",
+                "size-5 shadow-[-4px_4px_8px_0px_#00000040]",
+                "flex items-center justify-center rounded-full text-black",
+                "z-10 -mt-3",
                 {
                   "bg-green-400": artist.sideWon === artist.side,
                   "bg-orange-600": artist.sideWon !== artist.side,
                 }
-              )}
-            >
+              )}>
               {artist.sideWon === artist.side ? (
                 <CheckIcon className="size-3" />
               ) : (
@@ -72,7 +71,9 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
         ))}
       </div>
       {hasWinnings && (
-        <Button className="w-full mt-4 bg-[#76E6A0] shadow-[-8px_8px_20px_0px_rgba(0,0,0,0.20)] h-8">Claim Winnings!</Button>
+        <Button className="mt-4 h-8 w-full bg-[#76E6A0] shadow-[-8px_8px_20px_0px_rgba(0,0,0,0.20)]">
+          Claim Winnings!
+        </Button>
       )}
     </div>
   );

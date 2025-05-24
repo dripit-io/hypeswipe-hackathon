@@ -4,7 +4,7 @@ export interface Artist {
   country?: string;
   genre?: string;
   images: { url: string; height: number; width: number }[];
-  // ...
+  image?: string;
 }
 
 export interface EnhancedArtist extends Artist {
