@@ -1,18 +1,17 @@
 import React from "react";
 
 import { Header, RadialGradient } from "@/components/main";
-import { SwipeContainer } from "@/components/containers";
 
-const HomePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   return (
     <>
       <RadialGradient />
       <main className="container mx-auto relative flex flex-col h-full">
         <Header />
-        <SwipeContainer />
+        <section className="px-6">Profile page</section>
       </main>
     </>
   );
 };
 
-export default HomePage;
+export default ProfilePage;
