@@ -37,23 +37,20 @@ const HomePage: React.FC = () => {
 
   React.useEffect(() => {
     console.log({ challengeDetails });
-    if (
+    if (challengeDetails?.isResolved) {
+      setStep(Step.Results);
+    } else if (
       typeof challengeDetails?.targetDate === "number" &&
       Date.now() > (challengeDetails?.targetDate ?? 0) * 1000
     ) {
-      if (challengeDetails?.isResolved) {
-        setStep(Step.Results);
-      } else {
-        setStep(Step.PendingResults);
-      }
+      setStep(Step.PendingResults);
+    } else if (userPrediction?.hasParticipated) {
+      setStep(Step.PendingResults);
     }
-  }, [challengeDetails]);
+  }, [challengeDetails, userPrediction]);
 
   React.useEffect(() => {
     console.log({ userPrediction, challengeOutcomes });
-    if (!isEmpty(userPrediction?.predictions)) {
-      setStep(Step.PendingResults);
-    }
     if (
       !isEmpty(artists) &&
       !isEmpty(userPrediction?.predictions) &&
@@ -113,7 +110,12 @@ const HomePage: React.FC = () => {
             prediction={selection}
           />
         )}
-        {step === Step.Results && <ResultsContainer prediction={selection} />}
+        {step === Step.Results && (
+          <ResultsContainer
+            prediction={selection}
+            hasClaimed={userPrediction?.hasClaimed ?? false}
+          />
+        )}
       </main>
     </>
   );

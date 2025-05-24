@@ -16,10 +16,12 @@ import { useClaimAllRewards, useGetClaims } from "@/hooks";
 
 interface ResultsContainerProps {
   prediction: EnhancedArtist[];
+  hasClaimed: boolean;
 }
 
 export const ResultsContainer: React.FC<ResultsContainerProps> = ({
   prediction,
+  hasClaimed,
 }) => {
   const navigate = useNavigate();
   const [openClaimAllDialog, setOpenClaimAllDialog] = React.useState(false);
@@ -38,6 +40,13 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
   );
   const claimAllMutation = useClaimAllRewards();
   const { data: totalClaimableRewards } = useGetClaims();
+  const [claimAmount, setClaimAmount] = React.useState("0");
+
+  React.useEffect(() => {
+    if (Number(totalClaimableRewards ?? 0) > 0) {
+      setClaimAmount(formatBalance(Number(totalClaimableRewards ?? 0)));
+    }
+  }, [totalClaimableRewards]);
 
   return (
     <section className="flex flex-grow flex-col justify-between px-6 pt-0.5 pb-4">
@@ -82,15 +91,12 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
       {!hasWon ? (
         <div className="my-4 h-[1px] w-full bg-[#203F3B]" />
       ) : (
-        <PrizePool
-          amount={formatBalance(Number(totalClaimableRewards ?? 0))}
-          won
-        />
+        <PrizePool amount={claimAmount} won />
       )}
 
       <p className="mb-2">My Selections:</p>
       <SelectionList selection={prediction} />
-      {!hasWon ? (
+      {!hasWon && (
         <Button
           size="lg"
           className={cn(
@@ -101,21 +107,28 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
           onClick={() => navigate("/profile")}>
           Try Again
         </Button>
-      ) : (
+      )}
+
+      {hasWon && (
         <Button
           size="lg"
           className={cn(
             "w-full cursor-pointer rounded-full py-6 text-xl",
             "bg-[#76E6A0] text-black hover:bg-[#5cad7b]"
           )}
-          onClick={() => claimAllMutation.mutate()}>
+          loading={claimAllMutation.isPending}
+          disabled={hasClaimed || claimAllMutation.isSuccess}
+          onClick={() => {
+            setOpenClaimAllDialog(true);
+            claimAllMutation.mutate();
+          }}>
           Claim Winnings
         </Button>
       )}
       <ClaimRewardDialog
         isOpen={openClaimAllDialog}
         onOpenChange={setOpenClaimAllDialog}
-        rewardAmount={formatBalance(Number(totalClaimableRewards ?? 0))}
+        rewardAmount={claimAmount}
         status={claimAllMutation.status}
       />
     </section>
