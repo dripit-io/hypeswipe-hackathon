@@ -34,7 +34,7 @@ export const SwipeContainer: React.FC = () => {
           >
             <p
               className={cn(
-                "text-sm text-center mb-4 opacity-0",
+                "text-sm text-center mb-1 opacity-0",
                 "transition-all duration-150 ease-in-out",
                 { "opacity-100": currentIndex === index }
               )}
@@ -61,7 +61,7 @@ export const SwipeContainer: React.FC = () => {
           {[ArrowDownIcon, ArrowUpIcon].map((Icon, index) => (
             <div
               key={index}
-              className="size-[72px] flex justify-center items-center rounded-full bg-[#0E1E1B]"
+              className="size-[72px] flex justify-center items-center rounded-full bg-[#1B2426]"
             >
               <div className="size-[54px] bg-white/10 rounded-full flex justify-center items-center">
                 <Icon
@@ -99,7 +99,10 @@ export const SwipeContainer: React.FC = () => {
               )}
             >
               <img
-                className="object-cover size-full"
+                className={cn(
+                  "object-cover size-full",
+                  { "grayscale": artist?.side === undefined }
+                )}
                 src={artist.image}
                 alt={artist.name}
               />
