@@ -13,8 +13,8 @@ const ProfilePage: React.FC = () => {
           <div className="relative">
             <div className="rounded-full size-32 bg-slate-600/20"></div>
             <div className="absolute -top-0 -right-0 rounded-full size-10 bg-white flex flex-col items-center justify-center shadow-[-4px_4px_8px_0px_rgba(0,0,0,0.25)]">
-              <p className="text-black font-['TT_Fors_Trial'] text-xs font-bold">75%</p>
-              <p className="text-[#0F0915] font-['TT_Fors_Trial'] text-[8px]">wins</p>
+              <p className="text-black font-['TT_Fors_Trial'] text-xs font-bold text-center">75%</p>
+              <p className="text-[#0F0915] font-['TT_Fors_Trial'] text-[8px] text-center">wins</p>
             </div>
           </div>
           <div className="flex flex-col gap-[2px] mb-8">
