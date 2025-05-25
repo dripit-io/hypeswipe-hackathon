@@ -27,7 +27,8 @@ enum Step {
 const HomePage: React.FC = () => {
   const [step, setStep] = React.useState<Step>(Step.Swipe);
   const [selection, setSelection] = React.useState<EnhancedArtist[]>([]);
-  const { data: challengeDetails } = useGetChallenge();
+  const { data: challengeDetails, refetch: refetchChallengeDetails } =
+    useGetChallenge();
   const { data: artists } = useSpotifyArtists({
     spotifyIds: challengeDetails?.spotifyIds ?? [],
   });
@@ -102,6 +103,7 @@ const HomePage: React.FC = () => {
             entryFee={entryFee}
             onSuccess={() => {
               setStep(Step.PendingResults);
+              refetchChallengeDetails();
             }}
           />
         )}
