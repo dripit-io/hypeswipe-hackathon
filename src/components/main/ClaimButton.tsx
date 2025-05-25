@@ -57,7 +57,7 @@ export const ClaimButton: React.FC<ClaimButtonProps> = ({
         isOpen={openClaimAllDialog}
         onOpenChange={setOpenClaimAllDialog}
         rewardAmount={claimAmount}
-        status={"success"}
+        status={claimAllMutation.status}
       />
     </>
   );
