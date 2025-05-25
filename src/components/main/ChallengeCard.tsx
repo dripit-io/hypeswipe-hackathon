@@ -4,12 +4,17 @@ import { useGetChallengeOutcomes } from "@/hooks/useGetChallengeOutcomes";
 import { useSpotifyArtists } from "@/hooks/useSpotifyArtists";
 import { GameCard } from "./GameCard";
 import { useGetUserPrediction } from "@/hooks/useGetUserPrediction";
+
 interface ChallengeCardProps {
   challengeId: string;
+  hasClaimed: boolean;
+  totalClaimableRewards?: string;
 }
 
 export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   challengeId,
+  hasClaimed,
+  totalClaimableRewards,
 }) => {
   const { data: challengeDetails } = useGetChallengeDetails(
     Number(challengeId)
@@ -18,7 +23,10 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
   const { data: artists } = useSpotifyArtists({
     spotifyIds: challengeDetails?.spotifyIds ?? [],
   });
-  const { data: userPrediction } = useGetUserPrediction(Number(challengeId));
+  const { data: userPrediction } = useGetUserPrediction(
+    true,
+    Number(challengeId)
+  );
 
   if (!challengeDetails || !artists) return null;
 
@@ -45,6 +53,8 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
       key={challengeId}
       selection={enhancedArtists}
       challenge={challengeDetails}
+      hasClaimed={hasClaimed}
+      totalClaimableRewards={totalClaimableRewards}
     />
   );
 };

@@ -8,7 +8,12 @@ import {
 } from "@/components/main";
 import { ChallengeCard } from "@/components/main/ChallengeCard";
 import { useUserInfo } from "@/components/providers";
-import { useBalance, useGetClaims, useGetUserChallenges } from "@/hooks";
+import {
+  useBalance,
+  useGetClaims,
+  useGetUserChallenges,
+  useGetUserPrediction,
+} from "@/hooks";
 import { formatBalance } from "@/lib/utils";
 import { isEmpty, isNil } from "lodash";
 import { useAccount, useWalletClient } from "wagmi";
@@ -22,6 +27,7 @@ const ProfilePage: React.FC = () => {
     useGetClaims();
   const { data: walletClient } = useWalletClient();
   const { data: userChallenges } = useGetUserChallenges();
+  const { data: userPrediction } = useGetUserPrediction(true);
 
   const fetchBalances = React.useCallback(async () => {
     try {
@@ -100,7 +106,12 @@ const ProfilePage: React.FC = () => {
           <p className="text-base font-medium">My previous games:</p>
           <div className="flex w-full flex-col gap-4">
             {userChallenges?.map((challengeId: string) => (
-              <ChallengeCard key={challengeId} challengeId={challengeId} />
+              <ChallengeCard
+                key={challengeId}
+                challengeId={challengeId}
+                hasClaimed={userPrediction?.hasClaimed ?? false}
+                totalClaimableRewards={totalClaimableRewards}
+              />
             ))}
           </div>
         </div>

@@ -106,7 +106,10 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
               className={cn(
                 "w-full rounded-full bg-[#76E6A0] py-6 text-lg text-black hover:bg-teal-700"
               )}
-              onClick={() => navigate("/")}>
+              onClick={() => {
+                navigate("/profile");
+                onOpenChange(false);
+              }}>
               <span>Play again!</span>
             </Button>
           )}

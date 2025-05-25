@@ -1,16 +1,24 @@
 import React from "react";
+import { CheckIcon, XIcon } from "lucide-react";
+import { formatUnits } from "viem";
 
 import type { EnhancedArtist, ChallengeDetails } from "@/types";
 import { cn } from "@/lib";
-import { CheckIcon, XIcon } from "lucide-react";
-import { Button } from "@/components/main";
-import { formatUnits } from "viem";
+import { ClaimButton } from "@/components/main";
+
 interface GameCardProps {
   selection: EnhancedArtist[];
   challenge: ChallengeDetails;
+  hasClaimed: boolean;
+  totalClaimableRewards?: string;
 }
 
-export const GameCard: React.FC<GameCardProps> = ({ selection, challenge }) => {
+export const GameCard: React.FC<GameCardProps> = ({
+  selection,
+  challenge,
+  hasClaimed,
+  totalClaimableRewards,
+}) => {
   const sidesWon = React.useMemo(
     () =>
       selection.reduce(
@@ -73,10 +81,13 @@ export const GameCard: React.FC<GameCardProps> = ({ selection, challenge }) => {
           </div>
         ))}
       </div>
-      {hasWinnings && (
-        <Button className="mt-4 h-8 w-full bg-[#76E6A0] shadow-[-8px_8px_20px_0px_rgba(0,0,0,0.20)]">
+      {hasWinnings && !hasClaimed && (
+        <ClaimButton
+          className="mt-4 h-8 w-full bg-[#76E6A0] shadow-[-8px_8px_20px_0px_rgba(0,0,0,0.20)]"
+          totalClaimableRewards={totalClaimableRewards}
+          hasClaimed={hasClaimed}>
           Claim Winnings!
-        </Button>
+        </ClaimButton>
       )}
     </div>
   );

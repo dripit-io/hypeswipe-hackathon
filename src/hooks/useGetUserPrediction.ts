@@ -15,6 +15,7 @@ interface UserPredictionResponse {
 }
 
 export const useGetUserPrediction = (
+  enabled: boolean = true,
   challengeId?: number
 ): UseQueryResult<UserPredictionResponse> => {
   const { address } = useAccount();
@@ -31,7 +32,7 @@ export const useGetUserPrediction = (
         args: [],
       })) as bigint;
     },
-    enabled: !!walletClient && isNil(challengeId),
+    enabled: !!walletClient && isNil(challengeId) && enabled,
   });
 
   const effectiveChallengeId = React.useMemo(
@@ -78,6 +79,7 @@ export const useGetUserPrediction = (
 
       return output as UserPredictionResponse;
     },
-    enabled: !!walletClient && effectiveChallengeId >= 0 && !isNil(address),
+    enabled:
+      !!walletClient && effectiveChallengeId >= 0 && !isNil(address) && enabled,
   });
 };

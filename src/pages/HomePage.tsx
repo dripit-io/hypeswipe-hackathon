@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
     spotifyIds: challengeDetails?.spotifyIds ?? [],
   });
   const { data: entryFee } = useEntryFee();
-  const { data: userPrediction } = useGetUserPrediction();
+  const { data: userPrediction } = useGetUserPrediction(true);
   const { data: challengeOutcomes } = useGetChallengeOutcomes();
 
   React.useEffect(() => {
@@ -52,9 +52,6 @@ const HomePage: React.FC = () => {
   React.useEffect(() => {
     console.log({ userPrediction, challengeOutcomes });
 
-    if (userPrediction?.hasParticipated) {
-      setStep(Step.PendingResults);
-    }
     if (
       !isEmpty(artists) &&
       !isEmpty(userPrediction?.predictions) &&

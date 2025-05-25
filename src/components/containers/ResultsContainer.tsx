@@ -6,13 +6,13 @@ import BadgeStarIcon from "@/assets/badge-star.svg?react";
 import type { EnhancedArtist } from "@/types";
 import {
   Button,
-  ClaimRewardDialog,
+  ClaimButton,
   PrizePool,
   SelectionList,
 } from "@/components/main";
 import { cn, formatBalance } from "@/lib";
 import { useUserInfo } from "@/components/providers";
-import { useClaimAllRewards, useGetClaims } from "@/hooks";
+import { useGetClaims } from "@/hooks";
 
 interface ResultsContainerProps {
   prediction: EnhancedArtist[];
@@ -24,7 +24,6 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
   hasClaimed,
 }) => {
   const navigate = useNavigate();
-  const [openClaimAllDialog, setOpenClaimAllDialog] = React.useState(false);
   const { userInfo } = useUserInfo();
   const sidesWon = React.useMemo(
     () =>
@@ -38,7 +37,6 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
     () => !isEmpty(prediction) && sidesWon === prediction.length,
     [sidesWon, prediction]
   );
-  const claimAllMutation = useClaimAllRewards();
   const { data: totalClaimableRewards } = useGetClaims();
   const [claimAmount, setClaimAmount] = React.useState("0");
 
@@ -110,27 +108,16 @@ export const ResultsContainer: React.FC<ResultsContainerProps> = ({
       )}
 
       {hasWon && (
-        <Button
-          size="lg"
+        <ClaimButton
           className={cn(
             "w-full cursor-pointer rounded-full py-6 text-xl",
             "bg-[#76E6A0] text-black hover:bg-[#5cad7b]"
           )}
-          loading={claimAllMutation.isPending}
-          disabled={hasClaimed || claimAllMutation.isSuccess}
-          onClick={() => {
-            setOpenClaimAllDialog(true);
-            claimAllMutation.mutate();
-          }}>
+          totalClaimableRewards={totalClaimableRewards}
+          hasClaimed={hasClaimed}>
           Claim Winnings
-        </Button>
+        </ClaimButton>
       )}
-      <ClaimRewardDialog
-        isOpen={openClaimAllDialog}
-        onOpenChange={setOpenClaimAllDialog}
-        rewardAmount={claimAmount}
-        status={claimAllMutation.status}
-      />
     </section>
   );
 };

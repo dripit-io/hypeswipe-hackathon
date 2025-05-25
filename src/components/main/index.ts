@@ -1,5 +1,6 @@
 export * from "./Button";
 export * from "./BalanceDivider";
+export * from "./ClaimButton";
 export * from "./ClaimRewardDialog";
 export * from "./ConnectButton";
 export * from "./CountdownCircle";
