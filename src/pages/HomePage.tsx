@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
 
   React.useEffect(() => {
     console.log({ userPrediction, challengeOutcomes });
-    if (!isEmpty(userPrediction?.predictions)) {
+    if (userPrediction?.hasParticipated) {
       setStep(Step.PendingResults);
     }
     if (

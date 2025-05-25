@@ -1,15 +1,16 @@
 import React from "react";
 
-import type { EnhancedArtist } from "@/types";
+import type { EnhancedArtist, ChallengeDetails } from "@/types";
 import { cn } from "@/lib";
 import { CheckIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/main";
-
+import { formatUnits } from "viem";
 interface GameCardProps {
   selection: EnhancedArtist[];
+  challenge: ChallengeDetails;
 }
 
-export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
+export const GameCard: React.FC<GameCardProps> = ({ selection, challenge }) => {
   const sidesWon = React.useMemo(
     () =>
       selection.reduce(
@@ -25,10 +26,12 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
     <div className="w-full rounded-xl bg-white/[0.07] p-3">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <p className="font-bold text-white">Game #{1}</p>
+          <p className="font-bold text-white">Game #{challenge.id}</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-white">500 $ARENA</span>
+          <span className="text-sm text-white">
+            {formatUnits(challenge.totalPool, 18)}
+          </span>
           <img
             src="/assets/arena-logo.png"
             alt="arena logo"
@@ -41,7 +44,7 @@ export const GameCard: React.FC<GameCardProps> = ({ selection }) => {
           <div key={artist.id} className="flex flex-col items-center gap-1">
             <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-slate-800">
               <img
-                src={artist.image}
+                src={artist.images[0].url}
                 alt={artist.name}
                 className={cn("h-full w-full object-cover", {
                   grayscale: artist.sideWon !== artist.side,
