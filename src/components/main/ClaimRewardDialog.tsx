@@ -13,6 +13,7 @@ import TrophyTeal from "@/assets/trophy-teal.png";
 import TrophyRed from "@/assets/trophy-red.png";
 import ConfettiIcon from "@/assets/confetti-1-teal.svg?react";
 import { cn } from "@/lib";
+import { useNavigate } from "react-router-dom";
 
 interface ClaimRewardDialogProps {
   isOpen: boolean;
@@ -27,19 +28,20 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
   status,
   onOpenChange,
 }) => {
+  const navigate = useNavigate();
+
   const getContent = () => {
     let title: React.ReactNode = (
       <span className="flex items-center gap-3">
-        <span className="text-[#76E6A0] text-lg">Reward:</span>
+        <span className="text-lg text-[#76E6A0]">Reward:</span>
         <span className="flex items-end gap-2">
-          <span className="font-bold text-2xl">{rewardAmount}</span>
+          <span className="text-2xl font-bold">{rewardAmount}</span>
           <span className="text-lg">$ARENA</span>
         </span>
       </span>
     );
-    let description:
-      | string
-      | null = `${rewardAmount} $ARENA has been added to your wallet. Ready for the next game?`;
+    let description: string | null =
+      `${rewardAmount} $ARENA has been added to your wallet. Ready for the next game?`;
 
     if (["pending", "idle"].includes(status)) {
       title = "Claiming...";
@@ -60,21 +62,19 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
       onOpenChange={(newOpen: boolean) => {
         if (!newOpen && ["pending", "idle"].includes(status)) return;
         onOpenChange(newOpen);
-      }}
-    >
+      }}>
       <DialogOverlay className="opacity-10" />
       <DialogContent
         className={cn(
           animationClass,
           "min-h-0 w-11/12 overflow-hidden rounded-2xl p-6 pb-8 sm:w-10/12 md:max-w-[440px]",
-          "border-[#76E6A0] bg-[#76E6A0]/10 text-white outline-none backdrop-blur-lg",
+          "border-[#76E6A0] bg-[#76E6A0]/10 text-white backdrop-blur-lg outline-none",
           {
             "min-h-[340px]": status !== "error",
             "border-red-400 bg-red-400/15": status === "error",
           }
         )}
-        hideCloseButton={["pending", "idle"].includes(status)}
-      >
+        hideCloseButton={["pending", "idle"].includes(status)}>
         {/* a11y */}
         <DialogTitle className="hidden">{getContent().title}</DialogTitle>
         <div className="flex flex-col items-center justify-center gap-6">
@@ -88,8 +88,7 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
               animationClass,
               "text-2xl font-semibold text-[#76E6A0]",
               { "text-red-400": status === "error" }
-            )}
-          >
+            )}>
             {getContent().title}
           </p>
           {getContent().description && (
@@ -98,26 +97,23 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
                 animationClass,
                 "text-center text-sm font-normal text-teal-50",
                 { "text-red-100": status === "error" }
-              )}
-            >
+              )}>
               {getContent().description}
             </p>
           )}
           {status === "success" && (
             <Button
               className={cn(
-                "w-full bg-[#76E6A0] text-lg rounded-full py-6 text-black hover:bg-teal-700"
+                "w-full rounded-full bg-[#76E6A0] py-6 text-lg text-black hover:bg-teal-700"
               )}
-              onClick={() => onOpenChange(false)}
-            >
+              onClick={() => navigate("/")}>
               <span>Play again!</span>
             </Button>
           )}
           {status === "error" && (
             <Button
-              className="w-full bg-red-500 text-lg py-6 rounded-full text-white hover:bg-red-600"
-              onClick={() => onOpenChange(false)}
-            >
+              className="w-full rounded-full bg-red-500 py-6 text-lg text-white hover:bg-red-600"
+              onClick={() => onOpenChange(false)}>
               <span>Try again later</span>
             </Button>
           )}
@@ -127,11 +123,11 @@ export const ClaimRewardDialog: React.FC<ClaimRewardDialogProps> = ({
             />
           )}
         </div>
-        <div className={cn("absolute left-0 top-0 z-[-1] h-full w-full")}>
+        <div className={cn("absolute top-0 left-0 z-[-1] h-full w-full")}>
           <ConfettiIcon
             className={cn(
               animationClass,
-              "absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2",
+              "absolute top-1/2 left-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2",
               "opacity-50 transition-all duration-150",
               { "opacity-0": status === "error" }
             )}

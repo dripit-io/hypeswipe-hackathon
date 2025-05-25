@@ -47,8 +47,8 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
     <motion.div
       className={cn(
         "aspect-[69/108] w-[87.5%] max-w-[420px] rounded-3xl bg-slate-800 object-cover",
-        "relative overflow-hidden hover:cursor-grab active:cursor-grabbing",
-        { "z-10": isFirst }
+        "relative z-[8] overflow-hidden hover:cursor-grab active:cursor-grabbing",
+        { "z-10": isFirst, "z-[9]": isSecond }
       )}
       style={{
         gridRow: 1,

@@ -45,7 +45,7 @@ export const SwipeContainer: React.FC<SwipeContainerProps> = ({
     ) as EnhancedArtist[];
 
     setEnhancedArtists([...newEnhancedArtists]);
-    const isLastCard = swipeCards.length === 1;
+    const isLastCardRemaining = swipeCards.length === 1;
     console.log({
       artist,
       isRight,
@@ -55,7 +55,7 @@ export const SwipeContainer: React.FC<SwipeContainerProps> = ({
     });
     setCurrentIndex((pv) => pv + 1);
     setSwipeCards((pv) => pv.filter((v) => v.id !== artist.id));
-    if (isLastCard) {
+    if (isLastCardRemaining) {
       onComplete?.(newEnhancedArtists);
     }
   };
@@ -110,8 +110,8 @@ export const SwipeContainer: React.FC<SwipeContainerProps> = ({
           {swipeCards.map((card, index) => (
             <SwipeCard
               key={card.id}
-              isFirst={index === swipeCards.length - 1}
-              isSecond={index === swipeCards.length - 2}
+              isFirst={index === 0}
+              isSecond={index === 1}
               onSwipe={(isRight) => handleSwipe(card, isRight)}
               x={card.id === swipingCardId ? x : undefined}
               y={card.id === swipingCardId ? y : undefined}
@@ -124,12 +124,7 @@ export const SwipeContainer: React.FC<SwipeContainerProps> = ({
             <button
               key={index}
               className="flex size-[72px] items-center justify-center rounded-full bg-[#1B2426]"
-              onClick={() =>
-                handleButtonSwipe(
-                  swipeCards[swipeCards.length - 1],
-                  index === 1
-                )
-              }>
+              onClick={() => handleButtonSwipe(swipeCards[0], index === 1)}>
               <div className="flex size-[54px] items-center justify-center rounded-full bg-white/10">
                 <Icon
                   className={cn("size-8", {
@@ -142,7 +137,7 @@ export const SwipeContainer: React.FC<SwipeContainerProps> = ({
           ))}
         </div>
       </div>
-      <div className="flex flex-row-reverse items-center justify-center gap-2 p-2">
+      <div className="flex items-center justify-center gap-2 p-2">
         {enhancedArtists.map((artist) => (
           <div
             key={artist.id}
