@@ -60,8 +60,14 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({ className }) => {
               }
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  <Button onClick={openAccountModal}>
-                    {account.displayName}
+                  <Button
+                    className={cn(
+                      "rounded-full bg-transparent",
+                      "border border-[#76E6A0] text-[#76E6A0]",
+                      ":hovertext-[#5cad7b] hover:border-[#5cad7b]"
+                    )}
+                    onClick={openAccountModal}>
+                    Settings
                   </Button>
                 </div>
               );
