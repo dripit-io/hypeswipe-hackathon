@@ -4,36 +4,15 @@ import {
   Header,
   RadialGradient,
   BalanceDivider,
-  GameCard,
   ConnectButton,
 } from "@/components/main";
-import { mockArtists } from "@/constants";
-import type { EnhancedArtist } from "@/types";
+import { ChallengeCard } from "@/components/main/ChallengeCard";
 import { useUserInfo } from "@/components/providers";
-import { useBalance, useGetClaims } from "@/hooks";
+import { useBalance, useGetClaims, useGetUserChallenges } from "@/hooks";
 import { formatBalance } from "@/lib/utils";
 import { isEmpty, isNil } from "lodash";
 import { useAccount, useWalletClient } from "wagmi";
 import { UserIcon } from "lucide-react";
-
-// Mock game history data
-const mockGameHistory: EnhancedArtist[][] = [
-  mockArtists.map((artist) => ({
-    ...artist,
-    side: Math.random() > 0.5 ? "left" : "right",
-    sideWon: Math.random() > 0.5 ? "left" : "right",
-  })),
-  mockArtists.map((artist) => ({
-    ...artist,
-    side: Math.random() > 0.5 ? "left" : "right",
-    sideWon: Math.random() > 0.5 ? "left" : "right",
-  })),
-  mockArtists.map((artist) => ({
-    ...artist,
-    side: Math.random() > 0.5 ? "left" : "right",
-    sideWon: Math.random() > 0.5 ? "left" : "right",
-  })),
-];
 
 const ProfilePage: React.FC = () => {
   const { userInfo } = useUserInfo();
@@ -42,6 +21,8 @@ const ProfilePage: React.FC = () => {
   const { data: totalClaimableRewards, refetch: getTotalClaimableRewards } =
     useGetClaims();
   const { data: walletClient } = useWalletClient();
+  const { data: userChallenges } = useGetUserChallenges();
+
   const fetchBalances = React.useCallback(async () => {
     try {
       await getBalance();
@@ -118,8 +99,8 @@ const ProfilePage: React.FC = () => {
         <div className="flex w-full flex-col items-start justify-center gap-4 px-6 pb-8">
           <p className="text-base font-medium">My previous games:</p>
           <div className="flex w-full flex-col gap-4">
-            {mockGameHistory.map((game, index) => (
-              <GameCard key={index} selection={game} />
+            {userChallenges?.map((challengeId: string) => (
+              <ChallengeCard key={challengeId} challengeId={challengeId} />
             ))}
           </div>
         </div>

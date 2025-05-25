@@ -9,3 +9,5 @@ export * from "./useGetUserPrediction";
 export * from "./useGetUserInfo";
 export * from "./useMakePrediction";
 export * from "./useSpotifyArtists";
+export * from "./useGetUserChallenges";
+export * from "./useGetChallengeDetails";
